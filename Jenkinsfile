@@ -21,13 +21,18 @@ pipeline {
         }
 
         stage('Test'){
+            agent{
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps{
-                if(sh(script: 'test -f /workspaces/learn-jenkins-app/build/index.html', returnStatus: true)==0){
-                    echo 'File Exists'
-                }
-                else{
-                    echo 'File does not exist'
-                }
+                sh''' 
+                    test -f /workspaces/learn-jenkins-app/build/index.html
+                    npm test
+                '''
+                    
             }
         }
     }
